@@ -3,6 +3,10 @@ Utility for vector representation of word.
 This is based on TensorFlow RNN model data utils
 https://github.com/tensorflow/models/blob/master/tutorials/rnn/translate/data_utils.py
 
+Common workflow:
+* create vocabulary
+* tokenize data
+
 Files:
 1. Corpus file
 2. Vocabulary file
@@ -114,19 +118,22 @@ def create_vocabulary(vocabulary_file, data_source, max_vocabulary_size, tokeniz
             counter = 0
             for line in f:
                 counter += 1
+
                 if counter % 100000 == 0:
                     print("processing line %d" % counter)
-                    line = tf.compat.as_bytes(line)
-                    tokens = tokenizer(line)
-                    for w in tokens:
-                        word = _DIGIT_RE.sub(b"0", w)
-                        if word in vocab:
-                            vocab[word] += 1
-                        else:
-                            vocab[word] = 1
-                    vocab_list = _START_VOCAB + sorted(vocab, key=vocab.get, reverse=True)
-                    if len(vocab_list) > max_vocabulary_size:
-                        vocab_list = vocab_list[:max_vocabulary_size]
-                    with gfile.GFile(vocabulary_file, mode="wb") as vocab_file:
-                        for w in vocab_list:
-                            vocab_file.write(w + b"\n")
+
+                line = tf.compat.as_bytes(line)
+                tokens = tokenizer(line)
+                for w in tokens:
+                    word = _DIGIT_RE.sub(b"0", w)
+                    if word in vocab:
+                        vocab[word] += 1
+                    else:
+                        vocab[word] = 1
+
+            vocab_list = _START_VOCAB + sorted(vocab, key=vocab.get, reverse=True)
+            if len(vocab_list) > max_vocabulary_size:
+                vocab_list = vocab_list[:max_vocabulary_size]
+            with gfile.GFile(vocabulary_file, mode="wb") as vocab_file:
+                for w in vocab_list:
+                    vocab_file.write(w + b"\n")
