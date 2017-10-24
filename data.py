@@ -33,6 +33,18 @@ _WORD_SPLIT = re.compile(b"([.,!?\"':;)(])")
 _DIGIT_RE = re.compile(br"\d")
 
 
+def basic_tokenizer(sentence):
+    """
+    Basic tokenizer, split the sentence into a list of tokens.
+    :param sentence: sentence to tokenize.
+    :return: list of token
+    """
+    words = []
+    for space_separated_fragment in sentence.strip().split():
+        words.extend(_WORD_SPLIT.split(space_separated_fragment))
+    return [w for w in words if w]
+
+
 def initialize_vocabulary(vocabulary_file):
     """
     Initialize vocabulary from file.
