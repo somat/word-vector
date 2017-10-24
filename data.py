@@ -66,7 +66,7 @@ def initialize_vocabulary(vocabulary_file):
         raise ValueError("Vocabulary file %s doesn't exist.", vocabulary_file)
 
 
-def sentence_to_token_ids(sentence, tokenizer, vocabulary):
+def sentence_to_token_ids(sentence, vocabulary, tokenizer):
     """
     Convert a string to list of integers representing token-ids.
     :param sentence: the sentence in bytes format to convert to token-ids.
